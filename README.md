@@ -8,7 +8,7 @@ ActionHandlers library to improve the Redux development experience
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
 
 # How to use this:
-- Put all Your reducer cases into functions
+- Put all Your reducer cases into functions, and put them in the action file
 ### src/actions/downloadSomething.js
 ```javascript
 export function downloadSomethingRequest_actionHandler(state, action) {
@@ -29,24 +29,6 @@ actionHandlers.add('something', DOWNLOAD_SOMETHING_REQUEST, downloadSomethingReq
 const reducer = (state = initialState, action = {}) => {
   return actionHandlers.runReducer('something', state, action);
 }
-```
-
-### src/reducers/downloadSomethingReducer.js
-```javascript
-import actionHandlers from 'redux-action-handlers'
-
-export const initialState = {
-  isFetching: false,
-  data: {},
-  registration: null,
-  visible: false
-};
-
-const reducer = (state = initialState, action = {}) => {
-  return actionHandlers.runReducer('something', state, action);
-}
-
-export default reducer
 ```
 
 # Benefits of using this library:
