@@ -1,0 +1,29 @@
+{
+  "author": {
+    "name": "Sivael"
+  },
+  "bugs": {
+    "url": "https://github.com/sivael/ReduxActionHandlers/issues"
+  },
+  "dependencies": {},
+  "description": "Redux actionHandlers object",
+  "devDependencies": {},
+  "directories": {},
+  "homepage": "https://github.com/sivael/ReduxActionHandlers#readme",
+  "keywords": [],
+  "main": "./ActionHandlers.js",
+  "maintainers": [
+    {
+      "name": "sivael",
+      "email": "sivael@gensys.pl"
+    }
+  ],
+  "name": "redux-action-handlers",
+  "optionalDependencies": {},
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sivael/ReduxActionHandlers.git"
+  },
+  "version": "1.0.1"
+}
