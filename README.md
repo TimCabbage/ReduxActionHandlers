@@ -7,6 +7,48 @@ ActionHandlers library to improve the Redux development experience
 
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
 
+# How to use this:
+- Put all Your reducer cases into functions
+### src/actions/downloadSomething.js
+```javascript
+export function downloadSomethingRequest_actionHandler(state, action) {
+  return {
+    ...state,
+    registration: action.payload,
+    isFetching: true,
+    data: {}
+  }
+}
+```
+- Add them to actionHandlers (for reducer "something", map "DOWNLOAD_SOMETHING_REQUEST" action type to "downloadSomethingRequest_actionHandler" function)
+```javascript
+actionHandlers.add('something', DOWNLOAD_SOMETHING_REQUEST, downloadSomethingRequest_actionHandler)
+```
+- Add handling to reducer
+```javascript
+const reducer = (state = initialState, action = {}) => {
+  return actionHandlers.runReducer('something', state, action);
+}
+```
+
+### src/reducers/downloadSomethingReducer.js
+```javascript
+import actionHandlers from 'redux-action-handlers'
+
+export const initialState = {
+  isFetching: false,
+  data: {},
+  registration: null,
+  visible: false
+};
+
+const reducer = (state = initialState, action = {}) => {
+  return actionHandlers.runReducer('something', state, action);
+}
+
+export default reducer
+```
+
 # Benefits of using this library:
 - **One file describing all the functionality of an action.** Instead of splitting the action creator logic and reducer logic to two separate files, one **concern** is in one file.
 - **Huge reducers are no longer a problem.** Instead of having all the reducer handling code in one huge switch...case block, each action is in it's own function which makes it cleaner.
@@ -20,11 +62,11 @@ ActionHandlers library to improve the Redux development experience
 - Supports nested combineReducers
 - Supports many-to-many relationships between actions and reducer cases.
 - It's tiny. All it takes is 31 lines of code.
+- Testing is unchanged, but can be optimized. By testing the reducer functions directly, tests can become much clearer, but this library doesn't force it. You can test the whole reducer.
 
 # ReduxActionHandlers reason to exist
 
 To create a single action and a reducer, you have to create multiple files and put a part of the implementation in each of them:
-*For the full sources please look in docs/projects/rawRedux_01*
 
 ### src/actions/downloadSomething_types.js
 ```javascript
@@ -117,8 +159,6 @@ export default reducer
 ```
 
 ## This single concern, single chunk of functionality is spread over three separate files.
-
-(We're not touching the testing files because this library does not influence testing at all - You can test the way You do now)
 It makes it difficult to reason about and debug. The reducer construction is also an issue because it very easily can grow into a monster like this (and this has a potential to be **much** bigger):
 ```javascript
 import {
