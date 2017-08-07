@@ -2,9 +2,10 @@
 ActionHandlers library to improve the Redux development experience
 
 [![Node version](https://img.shields.io/node/v/redux-action-handlers.svg?style=flat)](http://nodejs.org/download/)
+
 [![https://nodei.co/npm/redux-action-handlers.png?downloads=true&downloadRank=true&stars=true](https://nodei.co/npm/redux-action-handlers.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/redux-action-handlers)
-[![HitCount](https://hitt.herokuapp.com/sivael/ReduxActionHandlers.svg)](https://github.com/sivael/ReduxActionHandlers)
-## Contributing [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
+
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
 
 # Benefits of using this library:
 - **One file describing all the functionality of an action.** Instead of splitting the action creator logic and reducer logic to two separate files, one **concern** is in one file.
@@ -24,15 +25,16 @@ ActionHandlers library to improve the Redux development experience
 
 To create a single action and a reducer, you have to create multiple files and put a part of the implementation in each of them:
 *For the full sources please look in docs/projects/rawRedux_01*
+
 ### src/actions/downloadSomething_types.js
-`
+```javascript
 export const DOWNLOAD_SOMETHING_REQUEST = '@request/DOWNLOAD_SOMETHING_REQUEST'
 export const DOWNLOAD_SOMETHING_SUCCESS = '@request/DOWNLOAD_SOMETHING_SUCCESS'
 export const DOWNLOAD_SOMETHING_FAILURE = '@request/DOWNLOAD_SOMETHING_FAILURE'
-`
+```
 
 ### src/actions/downloadSomething.js
-`
+```javascript
 import {
   DOWNLOAD_SOMETHING_REQUEST,
   DOWNLOAD_SOMETHING_SUCCESS,
@@ -60,10 +62,10 @@ export default function downloadSomethingAction() {
       )
   }
 }
-`
+```
 
 ### src/reducers/downloadReducer.js
-`
+```javascript
 import {
   DOWNLOAD_SOMETHING_REQUEST,
   DOWNLOAD_SOMETHING_SUCCESS,
@@ -112,12 +114,13 @@ const reducer = (state = initialState, action = {}) => {
 }
 
 export default reducer
-`
+```
 
 ** This single concern, single chunk of functionality is spread over three separate files.
 (We're not touching the testing files because this library does not influence testing at all - You can test the way You do now)
 It makes it difficult to reason about and debug. The reducer construction is also an issue because it very easily can grow into a monster like this (and this has a potential to be **much** bigger):
-`import {
+```javascript
+import {
   OPEN_INFO_PANEL,
   CLOSE_INFO_PANEL,
   READ_INFO_REQUEST,
@@ -235,14 +238,14 @@ export default (state = defaultState, action = {}) => {
       return state
   }
 }
-`
+```
 
 * Solution:
 ReduxActionHandlers!
 *** Idea:
 Put all the reducer cases into functions like so:
 Before:
-`
+```javascript
 case DOWNLOAD_SOMETHING_REQUEST:
   return {
     ...state,
@@ -250,10 +253,10 @@ case DOWNLOAD_SOMETHING_REQUEST:
     isFetching: true,
     data: {}
   }
-`
+```
 
 After:
-`
+```javascript
 function downloadSomethingRequest_actionHandler(state, action) {
   return {
     ...state,
@@ -262,16 +265,18 @@ function downloadSomethingRequest_actionHandler(state, action) {
     data: {}
   }
 }
-`
+```
 
 Then, instead of attaching actions externally ( from reducer ) we would attach actions to a reducer like so:
 
-`actionHandlers.add('something', DOWNLOAD_SOMETHING_REQUEST, downloadSomethingRequest_actionHandler)`
+```javascript
+actionHandlers.add('something', DOWNLOAD_SOMETHING_REQUEST, downloadSomethingRequest_actionHandler)
+```
 
 Resulting files would be as follows:
 
 ### src/actions/downloadSomething.js
-`
+```javascript
 import actionHandlers from 'redux-action-handlers'
 
 const DOWNLOAD_SOMETHING_REQUEST = '@request/DOWNLOAD_SOMETHING_REQUEST'
@@ -328,10 +333,10 @@ export default function downloadSomethingAction() {
 actionHandlers.add('something', DOWNLOAD_SOMETHING_REQUEST, downloadSomethingRequest_actionHandler)
 actionHandlers.add('something', DOWNLOAD_SOMETHING_SUCCESS, downloadSomethingSuccess_actionHandler)
 actionHandlers.add('something', DOWNLOAD_SOMETHING_FAILURE, downloadSomethingFailure_actionHandler)
-`
+```
 
 ### src/reducers/downloadSomethingReducer.js
-`
+```javascript
 import actionHandlers from 'redux-action-handlers'
 
 export const initialState = {
@@ -346,4 +351,4 @@ const reducer = (state = initialState, action = {}) => {
 }
 
 export default reducer
-`
+```
