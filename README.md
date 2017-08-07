@@ -116,7 +116,8 @@ const reducer = (state = initialState, action = {}) => {
 export default reducer
 ```
 
-** This single concern, single chunk of functionality is spread over three separate files.
+## This single concern, single chunk of functionality is spread over three separate files.
+
 (We're not touching the testing files because this library does not influence testing at all - You can test the way You do now)
 It makes it difficult to reason about and debug. The reducer construction is also an issue because it very easily can grow into a monster like this (and this has a potential to be **much** bigger):
 ```javascript
@@ -240,11 +241,11 @@ export default (state = defaultState, action = {}) => {
 }
 ```
 
-* Solution:
+# Solution:
 ReduxActionHandlers!
-*** Idea:
+### Idea:
 Put all the reducer cases into functions like so:
-Before:
+## Before:
 ```javascript
 case DOWNLOAD_SOMETHING_REQUEST:
   return {
@@ -255,7 +256,7 @@ case DOWNLOAD_SOMETHING_REQUEST:
   }
 ```
 
-After:
+## After:
 ```javascript
 function downloadSomethingRequest_actionHandler(state, action) {
   return {
@@ -267,13 +268,13 @@ function downloadSomethingRequest_actionHandler(state, action) {
 }
 ```
 
-Then, instead of attaching actions externally ( from reducer ) we would attach actions to a reducer like so:
+### Then, instead of attaching actions externally ( from reducer ) we would attach actions to a reducer like so:
 
 ```javascript
 actionHandlers.add('something', DOWNLOAD_SOMETHING_REQUEST, downloadSomethingRequest_actionHandler)
 ```
 
-Resulting files would be as follows:
+## Resulting files would be as follows:
 
 ### src/actions/downloadSomething.js
 ```javascript
